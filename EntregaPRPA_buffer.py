@@ -91,9 +91,9 @@ def productor (lista_arrays, i, empty, non_empty, mutex, valor_act):
     v = 0
     while (not terminado(lista_arrays)) and v < N2: #`
         delay(6)
-        empty[i].acquire()
+        empty.acquire()
         producir(lista_arrays, i, mutex, v, valor_act.value)
-        non_empty[i].release()
+        non_empty.release()
         v+=1        
     mutex.acquire()
     v = 0
@@ -102,8 +102,8 @@ def productor (lista_arrays, i, empty, non_empty, mutex, valor_act):
     lista_arrays[i][v] = -1 #Situamos el -1 que determina su finalizacion
     mutex.release()
     print ('he terminado', v)
-    non_empty[i].release()
-    non_empty[i].release()
+    non_empty.release()
+    non_empty.release()
         
 def print_e(lista_arrays): #Funcion auxiliar para la visualizacion
     for i in range(NPROD):
@@ -168,7 +168,7 @@ def main():
         non_empty.append(Semaphore(0)) 
     prodlst = [ Process(target=productor,
                         name=f'prod_{i}',
-                        args=(lista_arrays, i, empty, non_empty, mutex, valor_act))
+                        args=(lista_arrays, i, empty[i], non_empty[i], mutex, valor_act))
                 for i in range(NPROD) ]
     cons = [ Process(target=consumidor,
                       name="consumidor",
