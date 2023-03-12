@@ -67,10 +67,10 @@ def productor (estados_procesos, i, empty, non_empty, mutex):
     v = 0
     while (not terminado(estados_procesos)) and v < N2+1:
         delay(6)
-        empty[i].acquire()
+        empty.acquire()
         producir(estados_procesos, i, mutex)
         #print('produzco', estados_procesos[i])
-        non_empty[i].release()
+        non_empty.release()
         v+=1
     estados_procesos[i] = -1
     print ('he terminado')
@@ -145,7 +145,7 @@ def main():
         non_empty[i].acquire()
     prodlst = [ Process(target=productor,
                         name=f'prod_{i}',
-                        args=(estados_procesos, i, empty, non_empty, mutex))
+                        args=(estados_procesos, i, empty[i], non_empty[i], mutex))
                 for i in range(NPROD) ]
     cons = [ Process(target=consumidor,
                       name="consumidor",
